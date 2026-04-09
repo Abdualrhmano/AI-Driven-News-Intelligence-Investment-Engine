@@ -1,0 +1,261 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 4
+            },
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -464,
+        -576
+      ],
+      "id": "c555790e-c465-42ed-9ee2-be9d7e4bf0db",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://newsapi.org/v2/everything?q=(Business OR War OR Sports OR Technology)&language=ar&apiKey=1dd6d387cc20466ab1a8f94dd965d1f4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -336,
+        -576
+      ],
+      "id": "9f681683-1709-4be4-9bb1-8d012c888424",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fz_RueFUeS5Y7TK7MBLEGz2BPmCWFFqTpJmEa77lC1I",
+          "mode": "list",
+          "cachedResultName": "اخبار",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fz_RueFUeS5Y7TK7MBLEGz2BPmCWFFqTpJmEa77lC1I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fz_RueFUeS5Y7TK7MBLEGz2BPmCWFFqTpJmEa77lC1I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.publishedAt }}",
+            "Title": "={{ $json.title }}",
+            "Intelligence Analysis": "={{ $node[\"AI Agent\"].json[\"output\"] }}",
+            "Source URL": "={{ $json.url }}",
+            "Investment Signal": "={{ $node[\"AI Agent\"].json[\"output\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Intelligence Analysis",
+              "displayName": "Intelligence Analysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Investment Signal",
+              "displayName": "Investment Signal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source URL",
+              "displayName": "Source URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        64,
+        -576
+      ],
+      "id": "5415e6ac-b3d9-4d11-9cca-dc600e6ad45d",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "4LYFqtKhSyuPXa84",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=أنت الآن المحلل الاستراتيجي في محرك. وظيفت هي فحص الخبر التالي تقنياً واستثمارياً بدقة جراحية.\"\n​Task Instructions:\n​مرحلة التصفية العميقة: إذا كان الخبر تافهاً، مكرراً، أو لا يحتوي على تغير جذري في التكنولوجيا أو الأسواق، رد بكلمة واحدة فقط: SKIP.\n​التحليل الجيوسياسي والتقني: استخرج الأثر الخفي وراء السطور. (مثلاً: هل يؤدي هذا الخبر لنقص في أشباه الموصلات؟).\n​الإشارة الاستثمارية: حدد الشركات المستفيدة والشركات المتضررة بشكل مباشر.\n​درجة الثقة (Confidence Score): قيم مصداقية الخبر من 1-10 بناءً على المصدر التفصيلي المذكور.\n​Output Format (Strict):\n​العنوان الاستراتيجي: [صياغة جديدة تجذب المستثمرين]\n​التحليل العميق: [موجز بحد أقصى 30 كلمة]\n​توصية التحرك: [راقب/استثمر/تجنب]\n​نسبة التأثير: [%]\n​الخبر المطلوب تحليله:\nالعنوان: {{ $json.title }}\nالتفاصيل: {{ $json.description }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -208,
+        -576
+      ],
+      "id": "f1b79a79-ab64-43a9-945c-de2192943893",
+      "name": "AI Agent",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "chatId": "7522858254",
+        "text": "={{ $node[\"AI Agent\"].json[\"output\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        -272
+      ],
+      "id": "93bb56bb-3361-4532-bfda-0fbc559054b6",
+      "name": "Send a text message",
+      "webhookId": "7133c6d3-cd7b-4b31-a42b-56192a3b3298",
+      "credentials": {
+        "telegramApi": {
+          "id": "wqvMDPF4tvhoDkQW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -384
+      ],
+      "id": "85449ad9-2d86-4688-ac57-285b57e96269",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "HGZ932ZRKyaWA57j",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c322d293-ec8c-4fe1-b390-dbb3c63a60c0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "75f30e5ee584329751f0484b39713dd8192ff9a9f97391fef47bc0de490c363b"
+  },
+  "id": "AfGZf0ff8PttqPym",
+  "tags": []
+}
