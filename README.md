@@ -11,12 +11,12 @@
 
 ## 1. Overview
 This **n8n workflow** runs every **4 hours** to:
-- Fetch Arabic news on **Business OR War OR Sports OR Technology** using **NewsAPI** (API key: `1dd6d387cc20466ab1a8f94dd965d1f4`).
+- Fetch Arabic news on **Business OR War OR Sports OR Technology** using **NewsAPI** (API key: ``).
 - Process articles with **Google Gemini** AI agent for:
   - **Intelligence Analysis**
   - **Investment Signals** (with confidence score 1-10)
-- Append results to **Google Sheets** (Spreadsheet ID: `1FzRueFUeS5Y7TK7MBLEGz2BPmCWFFqTpJmEa77lC1I`, Sheet: `gid=0`).
-- Send notifications to **Telegram** chat (`chatId: 7522858254`).
+- Append results to **Google Sheets** (Spreadsheet ID: ``, Sheet: `gid=0`).
+- Send notifications to **Telegram** chat (`chatId: `).
 
 **Key Outputs**: Date, Title, Intelligence Analysis, Investment Signal, Source URL.[1]
 
@@ -27,7 +27,7 @@ graph LR
     A[Schedule Trigger<br/>Every 4 Hours] --> B[HTTP Request<br/>NewsAPI<br/>q=Business|War|Sports|Technology<br/>language=ar]
     B --> C[AI Agent<br/>Google Gemini<br/>Prompt: Title + Description<br/>Output: Analysis + Signal + Confidence]
     C --> D[Google Sheets<br/>Append Row<br/>Columns: Date|Title|Analysis|Signal|URL]
-    D --> E[Telegram<br/>Send Message<br/>chatId: 7522858254]
+    D --> E[Telegram<br/>Send Message<br/>chatId: ]
     
     F[Google Gemini<br/>Chat Model] -.-> C
     
@@ -50,8 +50,8 @@ graph LR
 - **n8n** instance (self-hosted or cloud).
 - **Google Sheets OAuth2** credentials.
 - **Telegram API** credentials.
-- **Google Gemini/PaLM API** key (`HGZ932ZRKyaWA57j`).
-- **NewsAPI** key (`1dd6d387cc20466ab1a8f94dd965d1f4`).
+- **Google Gemini/PaLM API** key (``).
+- **NewsAPI** key (``).
 
 ### Setup
 1. Import `My-workflow.json` into n8n.
